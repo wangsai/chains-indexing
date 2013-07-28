@@ -1,0 +1,47 @@
+{
+  "name": "chains-indexing",
+  "description": "Indexing yaml-front-matter information in markdown files",
+  "version": "0.1.0",
+  "homepage": "https://github.com/saiwang/chains-indexing",
+  "author": {
+    "name": "WangSai",
+    "email": "wangsai7885@gmail.com",
+    "url": "http://www.bootcss.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saiwang/chains-indexing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/saiwang/chains-indexing/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/saiwang/chains-indexing/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ],
+  "dependencies": {
+    "js-yaml": "~2.1.0",
+    "underscore": "~1.4.4"
+  }
+}
