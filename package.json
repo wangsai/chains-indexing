@@ -1,7 +1,7 @@
 {
   "name": "chains-indexing",
-  "description": "Indexing yaml-front-matter information in markdown files",
-  "version": "0.1.0",
+  "description": "Indexing yaml-front-matter information in files",
+  "version": "0.1.1",
   "homepage": "https://github.com/saiwang/chains-indexing",
   "author": {
     "name": "WangSai",
@@ -31,7 +31,6 @@
   "devDependencies": {
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
-    "grunt-contrib-nodeunit": "~0.2.0",
     "grunt": "~0.4.1"
   },
   "peerDependencies": {

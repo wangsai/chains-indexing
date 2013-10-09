@@ -17,16 +17,55 @@ module.exports = function(grunt) {
   // Please see the Grunt documentation for more information regarding task
   // creation: http://gruntjs.com/creating-tasks
 
-  grunt.registerMultiTask('indexing', 'Indexing yaml-front-matter information in markdown files.', function() {
+  grunt.registerMultiTask('indexing', 'Indexing yaml-front-matter information in files.', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      extraData: {},  //may be Object or Function to return more extra data. Parameter: the source file path
+      extraData: function(path){return {};},  //may be Object or Function to return more extra data. Parameter: the source file path
       includeContent: false,
-      contentName: '__content'
+      contentName: 'content',
+      sort: null  //sort function
     });
 
     
-    function extractYfm(src)
+    // Iterate over all specified file groups.
+    this.files.forEach(function(f) {
+
+      var json = f.src.filter(function(filepath) {
+        // Warn on and remove invalid source files (if nonull was set).
+        if (!grunt.file.exists(filepath)) {
+          grunt.log.warn('Source file "' + filepath + '" not found.');
+          return false;
+        } else {
+          return true;
+        }
+      }).map(function(filepath) {
+        var j = extractYfm(filepath, options.includeContent, options.contentName);
+        if(grunt.util.kindOf(options.extraData) === 'function')
+        {
+          j = _.extend({}, j, options.extraData(filepath));
+        }
+        else
+        {
+          j = _.extend({}, j, options.extraData);
+        }
+              
+        return j;
+      });
+
+      if(grunt.util.kindOf(options.sort) === 'function')
+      {
+        json = json.sort(options.sort);
+      }
+
+      // Write the destination file.
+      grunt.file.write(f.dest, JSON.stringify(json));
+
+      // Print a success message.
+      grunt.log.writeln('File "' + f.dest + '" created.');
+    });
+
+
+    function extractYfm(src, includeContent, contentName)
     {
         var re = /^-{3}([\w\W]+?)(-{3})([\w\W]*)*/;
         var text = grunt.file.read(src);
@@ -37,9 +76,9 @@ module.exports = function(grunt) {
           conf = jsYaml.load(results[1]);
 
           //Add content if set
-          if(options.includeContent) 
+          if(includeContent) 
           {
-            conf[options.contentName] = results[3] || '';
+            conf[contentName] = results[3] || '';
           }
 
         }
@@ -48,37 +87,6 @@ module.exports = function(grunt) {
         return conf;
     }
 
-    // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var json = JSON.stringify(f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
-        }
-      }).map(function(filepath) {
-        var j = extractYfm(filepath);
-        if(grunt.util.kindOf(options.extraData) === 'function')
-        {
-          j = _.extend(j, options.extraData(filepath));
-        }
-        else
-        {
-          j = _.extend(j, options.extraData);
-        }
-              
-        return j;
-      }));
-
-      // Write the destination file.
-      grunt.file.write(f.dest, json);
-
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
-    });
   });
 
 };

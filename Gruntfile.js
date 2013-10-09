@@ -15,8 +15,7 @@ module.exports = function(grunt) {
     jshint: {
       all: [
         'Gruntfile.js',
-        'tasks/*.js',
-        '<%= nodeunit.tests %>',
+        'tasks/*.js'
       ],
       options: {
         jshintrc: '.jshintrc',
@@ -32,19 +31,17 @@ module.exports = function(grunt) {
     indexing: {
       default_options: {
         options: {
-          extraData: function(filepath){return {filename: filepath}},
-          includeContent: true
+          extraData: function(filepath){return {filename: filepath};},
+          includeContent: false,
+          sort: function(a, b) {
+            return a.basename[0] - b.basename[0];
+          }
         },
         files: {
           'out/info.json': ['test/*.html'],
         },
       }
-    },
-
-    // Unit tests.
-    nodeunit: {
-      tests: ['test/*_test.js'],
-    },
+    }
 
   });
 
@@ -54,13 +51,8 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
-
-  // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-  // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'indexing', 'nodeunit']);
 
   // By default, lint and run all tests.
-  grunt.registerTask('default', ['jshint', 'test']);
+  grunt.registerTask('default', ['jshint', 'indexing']);
 
 };
